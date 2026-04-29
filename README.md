@@ -30,7 +30,7 @@ Jelaskan tentang business dashboard yang telah dibuat. Jika ada, sertakan juga l
 Telah dibuat sebuah dashboard interaktif menggunakan Streamlit.  Executive Summary: 
 * Menampilkan metrik utama seperti Total Mahasiswa (4.424), Dropout Rate (32,1%), dan Graduate Rate (49,9%).  
 * Analisis Faktor: Visualisasi distribusi status mahasiswa dan korelasi antara penerimaan beasiswa terhadap status kelulusan.  
-* Akses Dashboard: [Sertakan link Streamlit Cloud Anda di sini, contoh: a590proyekakhirana.streamlit.app].
+* Akses Dashboard: [a590proyekakhirana.streamlit.app].
 
 ## Menjalankan Sistem Machine Learning
 Jelaskan cara menjalankan protoype sistem machine learning yang telah dibuat. Selain itu, sertakan juga link untuk mengakses prototype tersebut.
