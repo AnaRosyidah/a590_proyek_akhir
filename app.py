@@ -8,7 +8,12 @@ import os
 # Load Model dan Metadata
 @st.cache_resource
 def load_model():
-    return joblib.load('model/model_jaya_jaya_institut.joblib')
+    model_path = 'model/model_jaya_jaya_institut.joblib'
+    if os.path.exists(model_path):
+        return joblib.load(model_path)
+    else:
+        st.error(f"File model tidak ditemukan di {model_path}. Pastikan folder 'model' sudah diunggah ke GitHub.")
+        st.stop()
 
 saved_data = load_model()
 model = saved_data['model']
