@@ -20,9 +20,15 @@ Proyek ini mencakup pengembangan solusi analisis data end-to-end, yaitu:
 
 ### Persiapan
 
-* Sumber data: Dataset berasal dari file students_performance/data.csv yang berisi data demografi, latar belakang pendidikan, status ekonomi, dan performa akademik mahasiswa pada semester 1 dan 2.  
+* Sumber data: Dataset diunduh secara manual atau diambil langsung dari database institusi, kemudian disimpan dalam file students_performance/data.csv. File ini berisi data lengkap mengenai demografi, latar belakang pendidikan, status ekonomi, serta performa akademik mahasiswa pada semester 1 dan semester 2.  
 
-* Setup environment: Menggunakan bahasa pemrograman Python dengan pustaka utama: pandas untuk pengolahan data, scikit-learn untuk pemodelan, matplotlib/seaborn untuk visualisasi, serta Streamlit untuk antarmuka dashboard.  
+* Setup environment: Proyek ini dikembangkan menggunakan bahasa pemrograman Python di dalam lingkungan virtual environment untuk meminimalisasi masalah ketergantungan antar pustaka (dependency).  
+    - Pustaka Utama: Menggunakan pandas dan numpy untuk pengolahan data, scikit-learn untuk pemodelan machine learning, matplotlib dan seaborn untuk visualisasi data, serta Streamlit untuk membangun antarmuka dashboard interaktif.  
+    - Langkah Pembuatan Environment (via Conda):
+      1. Membuat environment baru: conda create --name student-performance python=3.9.  
+      2. Mengaktifkan environment: conda activate student-performance.
+      3. Menginstal library yang dibutuhkan: pip install numpy pandas scipy matplotlib seaborn jupyter sqlalchemy scikit-learn==1.2.2 joblib==1.3.1 streamlit.  
+    - IDE: Eksperimen data dilakukan melalui Jupyter Notebook
 
 ## Business Dashboard
 Jelaskan tentang business dashboard yang telah dibuat. Jika ada, sertakan juga link untuk mengakses dashboard tersebut.
