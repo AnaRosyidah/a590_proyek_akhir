@@ -127,4 +127,4 @@ Berdasarkan data, status Debtor dan ketidaklancaran pembayaran SPP berkorelasi s
 * Skema: Menyediakan skema installment (cicilan) yang fleksibel bagi kelompok ini agar mereka tetap dapat fokus pada studi tanpa beban administratif yang menumpuk.
 
 3. Pendampingan Mahasiswa Berisiko Tinggi (Predictor-based):
-Menggunakan Student Risk Predictor yang telah dibangun, pihak BK (Bimbingan Konseling) akan mendapatkan laporan mingguan mengenai mahasiswa dengan skor risiko > 70%. Pihak BK akan melakukan deep interview untuk memahami apakah masalah utama mahasiswa adalah faktor internal (motivasi/akademik) atau eksternal (ekonomi/keluarga) untuk diberikan solusi yang presisi.
+Menggunakan Student Risk Predictor yang telah dibangun, pihak BK (Bimbingan Konseling) akan mendapatkan laporan mingguan mengenai mahasiswa dengan skor risiko > 70%. Pihak BK akan melakukan deep interview untuk memahami apakah masalah utama mahasiswa adalah faktor internal (motivasi/akademik) atau eksternal (ekonomi/keluarga) untuk diberikan solusi yang tepat.
