@@ -27,31 +27,42 @@ menu = st.sidebar.selectbox("Pilih Menu", ["Executive Summary", "Student Risk Pr
 if menu == "Executive Summary":
     st.title("📊 Dashboard Performa Siswa")
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Mahasiswa", "4,424")
-    with col2:
-        st.metric("Dropout Rate", "32.1%", "+2.5%", delta_color="inverse")
-    with col3:
-        st.metric("Graduate Rate", "50.0%", "-1.2%")
-
-    st.divider()
-
     if os.path.exists('students_performance/data.csv'):
-        df = pd.read_csv('students_performance/data.csv', sep=';')
-        st.subheader("Analisis Faktor Utama")
+        df_raw = pd.read_csv('students_performance/data.csv', sep=';')
+        df_raw['Status'] = df_raw['Status'].str.strip()
+        
+        # PERBAIKAN TOTAL: Meniadakan status 'Enrolled' sesuai saran reviewer
+        # Kita hanya menggunakan df_model untuk seluruh ringkasan dan grafik
+        df_model = df_raw[df_raw['Status'] != 'Enrolled'].copy()
+        
+        total_final = len(df_model)
+        dropout_rate = (df_model['Status'] == 'Dropout').mean()
+        graduate_rate = (df_model['Status'] == 'Graduate').mean()
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Mahasiswa (Lulus & Dropout)", f"{total_final:,}")
+        with col2:
+            st.metric("Dropout Rate", f"{dropout_rate:.1%}")
+        with col3:
+            st.metric("Graduate Rate", f"{graduate_rate:.1%}")
+
+        st.divider()
+        st.subheader("Analisis Faktor Utama (Data Latih Model)")
         gra1, gra2 = st.columns(2)
 
         with gra1:
-            st.write("**Distribusi Status Mahasiswa**")
+            # PERBAIKAN: Grafik pie hanya menunjukkan Dropout vs Graduate
+            st.write("**Proporsi Status Akhir Mahasiswa**")
             fig_pie, ax_pie = plt.subplots()
-            status_counts = df['Status'].value_counts()
+            status_counts = df_model['Status'].value_counts()
             ax_pie.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=140)
             st.pyplot(fig_pie)
 
         with gra2:
-            st.write("**Status vs Beasiswa**")
-            df_plot = df.copy()
+            # PERBAIKAN: Grafik bar hanya membandingkan Dropout vs Graduate terhadap Beasiswa
+            st.write("**Status Akhir vs Beasiswa**")
+            df_plot = df_model.copy()
             df_plot['Scholarship_holder'] = df_plot['Scholarship_holder'].map({0: 'Bukan Penerima', 1: 'Penerima Beasiswa'})
             
             fig_bar, ax_bar = plt.subplots(figsize=(8, 6))
@@ -72,9 +83,8 @@ if menu == "Executive Summary":
 
 # --- MENU 2: STUDENT RISK PREDICTOR ---
 elif menu == "Student Risk Predictor":
-    # st.title("🔍 Sistem Deteksi Dini Risiko Dropout")
     st.header("🔍 Sistem Deteksi Dini Risiko Dropout")
-    st.write("Masukkan data akademik mahasiswa untuk melihat prediksi risiko.")
+    st.write("Sistem ini melakukan inferensi untuk memprediksi kemungkinan status akhir siswa di masa depan.")
 
     with st.form("prediction_form"):
         col1, col2 = st.columns(2)
@@ -90,7 +100,6 @@ elif menu == "Student Risk Predictor":
         submit = st.form_submit_button("Analisis Risiko")
 
     if submit:
-        # 1. Siapkan data input
         input_data = pd.DataFrame([[0]*len(features)], columns=features)
         input_data['Tuition_fees_up_to_date'] = tuition
         input_data['Scholarship_holder'] = scholarship
@@ -99,23 +108,17 @@ elif menu == "Student Risk Predictor":
         input_data['Curricular_units_2nd_sem_approved'] = sem2_approved
         input_data['Age_at_enrollment'] = age
 
-        # 2. Prediksi dengan Penanganan Error Label
         classes_list = list(model.classes_)
-        
-        # Logika dinamis untuk mencari index Dropout
-        if 'Dropout' in classes_list:
-            dropout_idx = classes_list.index('Dropout')
-        elif 0 in classes_list:
-            dropout_idx = classes_list.index(0) # Asumsi 0 adalah Dropout jika label numerik
-        else:
-            dropout_idx = 0 # Fallback ke index pertama
-            
-        probability = model.predict_proba(input_data)[0][dropout_idx]
+        try:
+            dropout_idx = classes_list.index(0) 
+            probability = model.predict_proba(input_data)[0][dropout_idx]
 
-        # 3. Tampilkan Hasil
-        st.divider()
-        if probability > 0.7:
-            st.error(f"⚠️ RISIKO TINGGI: Mahasiswa ini berpeluang {probability:.2%} untuk Dropout.")
-            st.warning("Rekomendasi: Segera berikan bimbingan khusus atau konsultasi finansial.")
-        else:
-            st.success(f"✅ RISIKO RENDAH: Mahasiswa diprediksi tetap bertahan (Skor Dropout: {probability:.2%}).")
+            st.divider()
+            if probability > 0.7:
+                st.error(f"⚠️ RISIKO TINGGI: Mahasiswa ini berpeluang {probability:.2%} untuk Dropout.")
+                st.info("Rekomendasi: Berikan intervensi akademik atau finansial segera.")
+            else:
+                # Menampilkan potensi kelulusan (Graduate) sebagai hasil inferensi positif
+                st.success(f"✅ RISIKO RENDAH: Mahasiswa berpeluang {1-probability:.2%} untuk lulus (Graduate).")
+        except ValueError:
+            st.error("Terjadi kesalahan pada mapping label model. Pastikan model menggunakan label biner (0: Dropout, 1: Graduate).")

@@ -6,21 +6,21 @@ Jaya Jaya Institut merupakan institusi pendidikan tinggi (perguruan tinggi) yang
 
 ### Permasalahan Bisnis
 
-Permasalahan utama yang ingin diselesaikan adalah tingginya tingkat dropout mahasiswa yang mencapai 32,1%. Hal ini berdampak pada efektivitas pendidikan dan reputasi institusi. Institusi membutuhkan cara untuk mendeteksi sedini mungkin mahasiswa yang memiliki risiko tinggi untuk berhenti kuliah agar bimbingan konseling dapat diberikan secara tepat sasaran.
+Jaya Jaya Institut menghadapi tantangan besar terkait tingginya tingkat mahasiswa yang tidak menyelesaikan pendidikannya (dropout). Hal ini berdampak sangat signifikan pada efektivitas pendidikan dan reputasi institusi. Oleh seban itu, saya membuat analisis terhadap institusi yang sedang membutuhkan sebuah sistem deteksi dini untuk mengidentifikasi mahasiswa yang berisiko tinggi berhenti kuliah agar pihak bimbingan konseling dapat memberikan penanganan secara tepat sasaran.
 
 ### Cakupan Proyek
 
 Proyek ini mencakup pengembangan solusi analisis data end-to-end, yaitu:
-* Melakukan Exploratory Data Analysis (EDA) untuk menemukan faktor-faktor utama (Red Flags) yang memicu mahasiswa dropout, seperti faktor ekonomi dan performa akademik semester awal.  
+* Melakukan Exploratory Data Analysis (EDA) untuk menemukan faktor-faktor utama (Red Flags) yang memicu mahasiswa dropout.  
 * Membangun Dashboard Performa Siswa yang memberikan ringkasan eksekutif dan profil risiko mahasiswa bagi pihak manajemen.  
-* Mengembangkan Model Klasifikasi (Random Forest) untuk memprediksi status mahasiswa (Dropout, Enrolled, atau Graduate) dengan sistem skor risiko.
+* Mengembangkan Model Klasifikasi (Random Forest) untuk memprediksi potensi status akhir mahasiswa (Dropout atau Graduate) dengan sistem skor risiko.
 
 ### Persiapan
 
-* Sumber data: Dataset diunduh secara manual atau diambil langsung dari database institusi, kemudian disimpan dalam file students_performance/data.csv. File ini berisi data lengkap mengenai demografi, latar belakang pendidikan, status ekonomi, serta performa akademik mahasiswa pada semester 1 dan semester 2.  
+* Sumber data: Dataset diunduh secara manual atau diambil langsung dari [database](https://github.com/dicodingacademy/dicoding_dataset/tree/main/students_performance), kemudian disimpan dalam file students_performance/data.csv. Berkas ini berisi data lengkap mengenai demografi, latar belakang pendidikan, status ekonomi, serta performa akademik mahasiswa.  
 
-* Setup environment: Proyek ini dikembangkan menggunakan bahasa pemrograman Python di dalam lingkungan virtual environment untuk meminimalisasi masalah ketergantungan antar pustaka (dependency).  
-    - Pustaka Utama: Menggunakan pandas dan numpy untuk pengolahan data, scikit-learn untuk pemodelan machine learning, matplotlib dan seaborn untuk visualisasi data, serta Streamlit untuk membangun antarmuka dashboard interaktif.  
+* Setup environment: Dikembangkan menggunakan Python di dalam virtual environment.  
+    - Pustaka Utama: pandas, numpy, scikit-learn, matplotlib, seaborn, dan Streamlit.  
     - Langkah Pembuatan Environment (via Conda):
       1. Membuat environment baru: conda create --name student-performance python=3.9.  
       2. Mengaktifkan environment: conda activate student-performance.
@@ -29,10 +29,33 @@ Proyek ini mencakup pengembangan solusi analisis data end-to-end, yaitu:
 
 ## Business Dashboard
 
-Telah dibuat sebuah dashboard interaktif menggunakan Streamlit.  Executive Summary: 
-* Menampilkan metrik utama seperti Total Mahasiswa (4.424), Dropout Rate (32,1%), dan Graduate Rate (49,9%).  
-* Analisis Faktor: Visualisasi distribusi status mahasiswa dan korelasi antara penerimaan beasiswa terhadap status kelulusan.  
-* Akses Dashboard: [a590proyekakhirana.streamlit.app].
+Telah dibuat sebuah dashboard interaktif menggunakan Streamlit yang hanya memproses data final mahasiswa (Dropout dan Graduate) untuk memberikan analisis yang lebih tajam dan valid secara konsep.:  
+* Tautan Prototype (Streamlit Cloud): [a590proyekakhirana.streamlit.app].
+
+Executive Summary:
+* Menampilkan metrik utama yang mencerminkan data final institusi.
+
+* Analisis Faktor: Visualisasi distribusi status mahasiswa dan korelasi variabel kunci terhadap status kelulusan dengan label yang deskriptif.
+
+Menjalankan Dashboard Metabase (Docker)
+Silakan ikuti langkah-langkah di bawah ini untuk menjalankan environment Metabase menggunakan Docker.
+
+1. Spesifikasi Environment
+Versi Metabase: v0.49.13
+
+File Database: metabase.db.mv.db (Sudah disertakan dalam root folder proyek).
+
+2. Langkah-Langkah Menjalankan
+   docker pull metabase/metabase:v0.49.13
+
+   docker run -d -p 3000:3000 --name metabase_check metabase/metabase:v0.49.13
+
+   docker cp metabase.db.mv.db metabase_check:/metabase.db/metabase.db.mv.db
+
+   docker restart metabase_check
+
+3. Akses Dashboard & Kredensial
+   http://localhost:3000 (User: ana.rosyidah24@gmail.com / Pass: Rosyidah89).
 
 ## Menjalankan Sistem Machine Learning
 
@@ -42,9 +65,36 @@ Prototype sistem ini diintegrasikan ke dalam dashboard Streamlit pada menu "Stud
 
 * Hasil: Sistem akan mengeluarkan probabilitas risiko. Jika risiko > 70%, sistem akan memberikan label "RISIKO TINGGI" dengan peringatan berwarna merah.
 
+Berdasarkan revisi model terbaru yang fokus pada klasifikasi biner (Dropout vs Graduate), model berhasil mencapai performa sebagai berikut:
+
+* Akurasi Model: 91% pada data pengujian.
+
+* Metrik Kualitas: Model sangat tajam mengenali potensi dropout dengan skor precision dan recall yang seimbang di atas 80%, sehingga efektif sebagai sistem deteksi dini.
+
+* Fitur Utama: Faktor paling berpengaruh terhadap prediksi adalah jumlah mata kuliah yang lulus di semester 2, rata-rata nilai semester 2, dan kelancaran pembayaran uang kuliah.
+
 ## Conclusion
 
 Berdasarkan analisis, performa akademik di semester awal (khususnya jumlah mata kuliah yang lulus di semester 2) dan kelancaran finansial (status pembayaran SPP dan beasiswa) memiliki korelasi yang sangat kuat terhadap keputusan mahasiswa untuk bertahan atau dropout. Model Random Forest yang dibangun mampu memberikan skor risiko secara dinamis untuk membantu intervensi dini.
+
+1. Analisis Data & Dashboard
+
+   Dari hasil ulasan mendalam melalui EDA dan tampilan dashboard, kita bisa melihat pola yang jelas mengenai karakteristik mahasiswa yang cenderung mengalami dropout di Jaya Jaya Institut:
+
+   * Kendala Finansial adalah "Red Flag" Utama: Data menunjukkan bahwa mahasiswa dengan status pembayaran SPP yang tidak lancar (Tuition_fees_up_to_date = 0) serta mereka yang memiliki hutang (Debtor = 1) memiliki angka dropout yang jauh lebih tinggi dibandingkan mahasiswa tanpa masalah administrasi.  
+
+   * Performa Akademik di Semester Kedua: Keberhasilan melewati tahun pertama sangat krusial. Mahasiswa yang gagal meluluskan mata kuliah di semester 2 (Curricular_units_2nd_sem_approved) atau memiliki rata-rata nilai (Grade) rendah menunjukkan sinyal kuat akan segera berhenti kuliah.  
+
+   * Profil Demografi: Usia saat mendaftar ternyata berpengaruh; mahasiswa yang masuk di usia yang lebih tua cenderung lebih rentan dropout dibanding mahasiswa usia reguler. Selain itu, secara statistik dalam dataset ini, mahasiswa laki-laki memiliki kecenderungan dropout yang lebih besar.
+
+2. Performa Model Machine Learning
+
+   Untuk membantu institusi melakukan pencegahan, model Machine Learning telah dikembangkan dengan hasil sebagai berikut:Performa Sangat Baik: 
+   * Dengan menggunakan algoritma Random Forest Classifier, model kita berhasil mencapai tingkat Akurasi 91% pada data pengujian. Tidak hanya sekadar akurat secara total, model ini juga sangat tajam dalam mengenali mahasiswa yang akan dropout (skor precision dan recall di atas 80%), sehingga meminimalisir kesalahan prediksi.  
+   * Faktor Penentu Prediksi: Saat model bekerja, tiga fitur utama yang paling dijadikan acuan dalam mengambil keputusan adalah:
+   1. Jumlah mata kuliah yang berhasil lulus di semester 
+   2. Rata-rata nilai akademik di semester 
+   3. Status kelancaran pembayaran uang kuliah (SPP).
 
 ### Rekomendasi Action Items
 
