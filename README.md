@@ -59,13 +59,27 @@ File Database: metabase.db.mv.db (Sudah disertakan dalam root folder proyek).
 
 ## Menjalankan Sistem Machine Learning
 
-Prototype sistem ini diintegrasikan ke dalam dashboard Streamlit pada menu "Student Risk Predictor".  
+Prototype sistem ini telah dideploy dan diintegrasikan ke dalam dashboard Streamlit untuk menyediakan layanan deteksi dini bagi mahasiswa.
 
-* Cara Menjalankan: Pengguna memasukkan data akademik seperti status pembayaran SPP, status beasiswa, rata-rata nilai semester 1, status hutang, mata kuliah lulus semester 2, dan usia saat mendaftar.  
+* Link Prototype: https://a590proyekakhirana.streamlit.app/
 
-* Hasil: Sistem akan mengeluarkan probabilitas risiko. Jika risiko > 70%, sistem akan memberikan label "RISIKO TINGGI" dengan peringatan berwarna merah.
+Deployment Process
+Prototype ini telah berhasil di-deploy melalui Streamlit Cloud Community dengan tahapan sebagai berikut:
 
-Berdasarkan revisi model terbaru yang fokus pada klasifikasi biner (Dropout vs Graduate), model berhasil mencapai performa sebagai berikut:
+1. Mengunggah seluruh source code proyek (termasuk folder model/ dan requirements.txt) ke repositori GitHub.
+
+2. Melakukan login ke Streamlit Cloud dan mengintegrasikan repositori GitHub tersebut.
+
+
+3. Melakukan deployment aplikasi agar dapat diakses secara publik oleh pengguna. lakukan langkah seperti pada vidio berikut https://www.youtube.com/watch?v=JL9xOs-G1hI
+
+Cara Penggunaan
+* Input: Pengguna memasukkan data akademik seperti status pembayaran SPP, status beasiswa, rata-rata nilai semester 1, status hutang, mata kuliah lulus semester 2, dan usia saat mendaftar pada menu "Student Risk Predictor".
+
+* Output: Sistem akan mengeluarkan probabilitas risiko. Jika risiko > 70%, sistem akan memberikan label "RISIKO TINGGI" dengan peringatan berwarna merah.
+
+Performa Model
+*Berdasarkan revisi model terbaru yang fokus pada klasifikasi biner (Dropout vs Graduate), model berhasil mencapai performa sebagai berikut:
 
 * Akurasi Model: 91% pada data pengujian.
 
@@ -98,6 +112,19 @@ Berdasarkan analisis, performa akademik di semester awal (khususnya jumlah mata 
 
 ### Rekomendasi Action Items
 
-Beberapa tindakan yang disarankan bagi Jaya Jaya Institut:
-1. Sistem Peringatan Dini Akademik: Memberikan pendampingan bimbingan konseling khusus bagi mahasiswa yang memiliki nilai rata-rata rendah atau jumlah kelulusan mata kuliah di bawah standar pada semester 1.  
-2. Dukungan Finansial Terfokus: Memperluas program beasiswa atau memberikan skema cicilan bagi mahasiswa yang terdeteksi seb
+1. Sistem Peringatan Dini Akademik:
+Data menunjukkan bahwa kegagalan melewati tahun pertama adalah prediktor terkuat (Curricular_units_1st_sem_approved). Institusi harus menerapkan kebijakan "3-Strike Warning":
+
+* Jika mahasiswa gagal meluluskan < 10 mata kuliah di semester 1, mereka secara otomatis didaftarkan dalam sistem pendampingan akademik wajib.
+
+* Jika Grade semester 1 berada di bawah 11 (skala 0-20), mahasiswa diberikan akses ke kelas remedial/tutoring agar performa di semester 2 dapat diperbaiki.
+
+2. Dukungan Finansial Terfokus:
+Berdasarkan data, status Debtor dan ketidaklancaran pembayaran SPP berkorelasi signifikan dengan dropout.
+
+* Proaktif: Institusi tidak menunggu mahasiswa drop, melainkan mengirimkan email pemberitahuan mengenai "Opsi Keringanan Biaya" bagi mahasiswa yang terdeteksi memiliki status Debtor = 1 di pertengahan semester.
+
+* Skema: Menyediakan skema installment (cicilan) yang fleksibel bagi kelompok ini agar mereka tetap dapat fokus pada studi tanpa beban administratif yang menumpuk.
+
+3. Pendampingan Mahasiswa Berisiko Tinggi (Predictor-based):
+Menggunakan Student Risk Predictor yang telah dibangun, pihak BK (Bimbingan Konseling) akan mendapatkan laporan mingguan mengenai mahasiswa dengan skor risiko > 70%. Pihak BK akan melakukan deep interview untuk memahami apakah masalah utama mahasiswa adalah faktor internal (motivasi/akademik) atau eksternal (ekonomi/keluarga) untuk diberikan solusi yang presisi.
